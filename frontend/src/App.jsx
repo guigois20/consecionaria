@@ -1,17 +1,18 @@
 import Header from "../components/header";
-import itens from "../components/itens";
+import Home from "../pages/home";
+import Login from "../pages/login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <Header />
-      <section>
-        <div>
-          < itens />
-        </div>
-      </section>
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
