@@ -33,4 +33,24 @@ route.post("/", async (req, res) => {
   }
 });
 
+route.post("/login", async (req, res) => {
+  connectDB();
+  const { email, password } = req.body;
+
+  try {
+    const userdoc = await User.findOne({ email });
+    if (userdoc) {
+      const passwordCorrect = bcrypt.compareSync(password, userdoc.password);
+      const { name, _id } = userdoc;
+      passwordCorrect
+        ? res.json({ name, email, _id })
+        : res.status(400).json("senha incorreta");
+    } else {
+      res.status(400).json("usuario nao encontrado");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 export default route;
