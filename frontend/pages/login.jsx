@@ -21,7 +21,7 @@ const login = ({ setUser }) => {
         console.log(userdoc);
       } catch (error) {
         console.log(
-          `erro ao logar respose data senha ou email invalidos`,
+          `erro ao logar ${respose.data} senha ou email invalidos`,
           error,
         );
       }

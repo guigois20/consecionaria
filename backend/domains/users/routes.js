@@ -22,12 +22,11 @@ route.get("/", async (req, res) => {
 route.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
-    try {
-      const userinfo = jwt.verify(token, JWT_SECRET);
+    const userinfo = jwt.verify(token, JWT_SECRET, {}, (error, userinfo) => {
+      if (error) throw error;
+
       res.json(userinfo);
-    } catch (error) {
-      res.status(500).json(error);
-    }
+    });
   } else {
     res.json(null);
   }
@@ -62,9 +61,11 @@ route.post("/login", async (req, res) => {
 
       if (passwordCorrect) {
         const newuserobj = { name, email, _id };
-        const token = jwt.sign(newuserobj, JWT_SECRET);
+        const token = jwt.sign(newuserobj, JWT_SECRET, {}, (error, token) => {
+          if (error) throw error;
 
-        res.cookie("token", token).json(newuserobj);
+          res.cookie("token", token).json(newuserobj);
+        });
       } else {
         res.status(400).json("senha incorreta");
       }
@@ -74,6 +75,11 @@ route.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
+});
+
+route.post("/logout", async (req, res) => {
+  console.log("logout");
+  res.clearCookie("token").json("ok");
 });
 
 export default route;

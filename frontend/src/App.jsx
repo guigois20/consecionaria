@@ -1,13 +1,13 @@
 import Header from "../components/header";
 import Home from "../pages/home";
 import Login from "../pages/login";
+import Account from "../pages/Account.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 
-axios.defaults.baseURL = "http://localhost:3001";
-//import.meta.env.AXIOS_BASE_URL;
+axios.defaults.baseURL = import.meta.env.VITE_AXIOS_BASE_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -31,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/account/:subpage?" element={<Account user={user} />} />
       </Routes>
     </BrowserRouter>
   );
