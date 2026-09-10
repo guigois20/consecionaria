@@ -2,9 +2,12 @@ import { Router } from "express";
 import { connectDB } from "../../config/db.js";
 import User from "./usermodel.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import "dotenv";
 
 const route = Router();
 const bcryptsalt = bcrypt.genSaltSync();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 route.get("/", async (req, res) => {
   try {
@@ -13,6 +16,20 @@ route.get("/", async (req, res) => {
     res.json(userdoc);
   } catch (e) {
     console.log(e);
+  }
+});
+
+route.get("/profile", async (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    try {
+      const userinfo = jwt.verify(token, JWT_SECRET);
+      res.json(userinfo);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  } else {
+    res.json(null);
   }
 });
 
@@ -42,9 +59,15 @@ route.post("/login", async (req, res) => {
     if (userdoc) {
       const passwordCorrect = bcrypt.compareSync(password, userdoc.password);
       const { name, _id } = userdoc;
-      passwordCorrect
-        ? res.json({ name, email, _id })
-        : res.status(400).json("senha incorreta");
+
+      if (passwordCorrect) {
+        const newuserobj = { name, email, _id };
+        const token = jwt.sign(newuserobj, JWT_SECRET);
+
+        res.cookie("token", token).json(newuserobj);
+      } else {
+        res.status(400).json("senha incorreta");
+      }
     } else {
       res.status(400).json("usuario nao encontrado");
     }
