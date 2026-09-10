@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import Acclog from "../components/acclog";
 
-const account = ({ user }) => {
+const account = ({ user, setUser }) => {
   const { subpage } = useParams();
 
   const buttonclass = (button) => {
@@ -28,7 +28,9 @@ const account = ({ user }) => {
             buscar motos
           </Link>
         </div>
-        <div>{subpage === "perfil" && <Acclog user={user} />}</div>
+        <div>
+          {subpage === "perfil" && <Acclog user={user} setUser={setUser} />}
+        </div>
       </div>
     </section>
   );

@@ -3,13 +3,14 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-const Acclog = ({ user }) => {
+const Acclog = ({ user, setUser }) => {
   const [Redirect, setRedirect] = useState(false);
 
   const Logout = async () => {
     try {
       await axios.post("/users/logout");
       setRedirect(true);
+      setUser(null);
     } catch (error) {
       alert(JSON.stringify("erro ao deslogar"));
       console.log(error);
