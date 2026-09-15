@@ -1,9 +1,10 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import Acclog from "../components/acclog";
+import Acclog from "../components/Acclog.jsx";
+import Adicionar from "../components/adicionar.jsx";
 
 const account = ({ user, setUser }) => {
-  const { subpage } = useParams();
+  const { subpage, action } = useParams();
 
   const buttonclass = (button) => {
     let finalclassname =
@@ -28,8 +29,9 @@ const account = ({ user, setUser }) => {
             buscar motos
           </Link>
         </div>
-        <div>
+        <div className="w-full max-w-7xl">
           {subpage === "perfil" && <Acclog user={user} setUser={setUser} />}
+          {subpage === "adicionar" && <Adicionar />}
         </div>
       </div>
     </section>

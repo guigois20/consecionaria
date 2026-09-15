@@ -32,7 +32,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route
-          path="/account/:subpage?"
+          path="/account/:subpage/:action?"
           element={<Account user={user} setUser={setUser} />}
         />
       </Routes>

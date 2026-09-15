@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-const Acclog = ({ user, setUser }) => {
+const acclog = ({ user, setUser }) => {
   const [Redirect, setRedirect] = useState(false);
 
   const Logout = async () => {
@@ -39,4 +39,4 @@ const Acclog = ({ user, setUser }) => {
   );
 };
 
-export default Acclog;
+export default acclog;
