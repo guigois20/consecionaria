@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { movenext, hoje, useAno } from "../scripts/movenext.js";
+
 const newmoto = () => {
   const [btnvendida, setbtnvendida] = useState(false);
   const [jogoderoda, setjogoderoda] = useState(false);
-  const [modelo, setmodelo] = useState("");
-  const [cc, setcc] = useState("");
-  const [versao, setversao] = useState("");
-  const [placa, setplaca] = useState("");
+  const [modelo, setmodelo] = useState("biz");
+  const [cc, setcc] = useState("100");
+  const [versao, setversao] = useState("i");
+  const [letra, setletra] = useState("");
+  const [numero, setnumero] = useState("");
   const [cidade, setcidade] = useState("");
+  const [uf, setuf] = useState("se");
   const [km, setkm] = useState("");
-  const [cor, setcor] = useState("");
+  const [cor, setcor] = useState("preta");
   const [modeloEditado, setModeloEditado] = useState(false);
   const [comprador, setcomprador] = useState("");
   const [refcomprador, setrefcomprador] = useState("");
@@ -19,6 +22,7 @@ const newmoto = () => {
   const [refvendida, setrefvendida] = useState("");
   const [dtvend, setdtvend] = useState(hoje);
   const [vlvend, setvlvend] = useState("");
+  const [photolink, setphotolink] = useState("");
 
   const {
     anofabricado,
@@ -27,13 +31,40 @@ const newmoto = () => {
     handleAnoModeloChange,
   } = useAno();
 
-  const handleSbubmit = (e) => {
-    e.preventDefalut();
+  const handlephotolink = (e) => {
+    const link = photolink;
+
+    e.preventDefault();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const placa = `${letra}-${numero}`;
+    const cidader = `${cidade}/${uf}`;
+    const modelor = `${modelo} ${cc} ${versao}`;
+    const moto = {
+      modelor,
+      cidader,
+      placa,
+      km,
+      cor,
+      comprador,
+      refcomprador,
+      dtcomp,
+      vlcomp,
+      vendida,
+      refvendida,
+      dtvend,
+      vlvend,
+      photolink,
+    };
+
+    alert(JSON.stringify(moto, null, 2));
   };
 
   return (
     <form
-      onSubmit={handleSbubmit}
+      onSubmit={handleSubmit}
       className="flex w-full max-w-7xl flex-col items-center justify-center rounded-2xl border-2 border-gray-400 shadow-md shadow-orange-300"
     >
       <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-8 shadow-gray-700">
@@ -47,6 +78,10 @@ const newmoto = () => {
                 name="modelo"
                 id="modelo"
                 title="Modelo da motocicleta "
+                value={modelo}
+                onInput={(e) => {
+                  setmodelo(e.target.value);
+                }}
                 className="flex flex-row rounded-2xl border text-center"
               >
                 <option value="biz">Biz</option>
@@ -60,6 +95,10 @@ const newmoto = () => {
               </select>
               <select
                 name="cc"
+                value={cc}
+                onInput={(e) => {
+                  setcc(e.target.value);
+                }}
                 id="cc"
                 title="Cilindrada em cc"
                 className="flex flex-row rounded-2xl border text-center"
@@ -75,6 +114,10 @@ const newmoto = () => {
               <select
                 name="versao"
                 id="versao"
+                value={versao}
+                onInput={(e) => {
+                  setversao(e.target.value);
+                }}
                 title="Versão da motocicleta"
                 className="flex flex-row rounded-2xl border"
               >
@@ -93,7 +136,13 @@ const newmoto = () => {
                 name="letra"
                 id="letra"
                 placeholder="letra"
-                onInput={(e) => movenext(e.target, "numeros")}
+                value={letra}
+                onInput={(e) => {
+                  movenext(e.target, "numeros");
+                }}
+                onChange={(e) => {
+                  setletra(e.target.value);
+                }}
                 size="3"
                 maxLength="3"
               />
@@ -106,13 +155,23 @@ const newmoto = () => {
                 placeholder="numeros"
                 size="4"
                 maxLength="4"
-                onInput={(e) => movenext(e.target, "uf")}
+                value={numero}
+                onInput={(e) => {
+                  movenext(e.target, "uf");
+                }}
+                onChange={(e) => {
+                  setnumero(e.target.value);
+                }}
               />
               <select
                 name="uf"
                 id="uf"
                 title="uf"
                 className="rounded-2xl border text-center"
+                value={uf}
+                onChange={(e) => {
+                  setuf(e.target.value);
+                }}
               >
                 <option value="se">SE</option>
                 <option value="ba">BA</option>
@@ -126,7 +185,10 @@ const newmoto = () => {
                 type="text"
                 name="cidade"
                 id="cidade"
-                onInput={(e) => (e.target.value = e.target.value.toUpperCase())}
+                value={cidade}
+                onInput={(e) => {
+                  setcidade(e.target.value.toUpperCase());
+                }}
                 placeholder="qual é a cidade"
               />
               km :
@@ -136,6 +198,10 @@ const newmoto = () => {
                 name="km"
                 id="km"
                 placeholder="km"
+                value={km}
+                onChange={(e) => {
+                  setkm(e.target.value);
+                }}
                 maxLength="7"
                 step="1000"
               />
@@ -144,6 +210,10 @@ const newmoto = () => {
             <div className="cor">
               <select
                 name="cor"
+                value={cor}
+                onChange={(e) => {
+                  setcor(e.target.value);
+                }}
                 id="cor"
                 className="rounded-2xl border text-center"
               >
@@ -172,7 +242,6 @@ const newmoto = () => {
                 step="1"
                 value={anofabricado}
                 onChange={handleAnoFabricadoChange}
-
                 title="anofabricado"
               />
               Ano modelo
@@ -199,7 +268,8 @@ const newmoto = () => {
                 type="text"
                 name="comprador"
                 id="comprador"
-                onInput={(e) => (e.target.value = e.target.value.toUpperCase())}
+                value={comprador}
+                onInput={(e) => setcomprador(e.target.value.toUpperCase())}
                 placeholder="comprador"
               />
               <input
@@ -207,7 +277,8 @@ const newmoto = () => {
                 type="text"
                 name="refcomprador"
                 id="refcomprador"
-                onInput={(e) => (e.target.value = e.target.value.toUpperCase())}
+                value={refcomprador}
+                onInput={(e) => setrefcomprador(e.target.value.toUpperCase())}
                 placeholder="referencia comprador"
               />
               <div className="data comprada">
@@ -216,7 +287,10 @@ const newmoto = () => {
                   type="date"
                   name="data comprada"
                   id="dtcomp"
-                  defaultValue={hoje}
+                  value={dtcomp}
+                  onChange={(e) => {
+                    setdtcomp(e.target.value);
+                  }}
                   title="dtcomp"
                 />
                 <input
@@ -226,6 +300,10 @@ const newmoto = () => {
                   id="vlcomp"
                   size="6"
                   min="2000"
+                  value={vlcomp}
+                  onChange={(e) => {
+                    setvlcomp(e.target.value);
+                  }}
                   placeholder="valor comprada"
                   step="500"
                   title="preco comprada"
@@ -261,9 +339,8 @@ const newmoto = () => {
                   type="text"
                   name="vendida"
                   id="vendida"
-                  onInput={(e) =>
-                    (e.target.value = e.target.value.toUpperCase())
-                  }
+                  value={vendida}
+                  onChange={(e) => setvendida(e.target.value.toUpperCase())}
                   placeholder="vendida á"
                 />
                 <input
@@ -271,9 +348,8 @@ const newmoto = () => {
                   type="text"
                   name="refvendida"
                   id="refvendida"
-                  onInput={(e) =>
-                    (e.target.value = e.target.value.toUpperCase())
-                  }
+                  value={refvendida}
+                  onInput={(e) => setrefvendida(e.target.value.toUpperCase())}
                   placeholder="referencia de venda"
                 />
                 <div>
@@ -281,6 +357,8 @@ const newmoto = () => {
                     className="rounded-2xl border text-center"
                     type="date"
                     name="datavenda"
+                    value={dtvend}
+                    onInput={(e) => setdtvend(e.target.value)}
                     id="datavenda"
                     title="dtvend"
                   />
@@ -291,6 +369,10 @@ const newmoto = () => {
                     id="valorvenda"
                     min="0"
                     size="6"
+                    value={vlvend}
+                    onInput={(e) => {
+                      setvlvend(e.target.value);
+                    }}
                     placeholder="valor vendida"
                     step="500"
                     title="preco vendida"
@@ -316,10 +398,16 @@ const newmoto = () => {
                   type="url"
                   name="photolink"
                   id="photolink"
-
+                  value={photolink}
+                  onInput={(e) => {
+                    setphotolink(e.target.value);
+                  }}
                   placeholder="enviar foto pelo link"
                 />
-                <button className="min-w-32 rounded-2xl border bg-gray-100 text-center transition hover:cursor-pointer hover:bg-gray-500">
+                <button
+                  onClick={handlephotolink}
+                  className="min-w-32 rounded-2xl border bg-gray-100 text-center transition hover:cursor-pointer hover:bg-gray-500"
+                >
                   enviar foto
                 </button>
               </div>
