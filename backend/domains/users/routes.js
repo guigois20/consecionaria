@@ -4,6 +4,7 @@ import User from "./usermodel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv";
+import { JWTsign, Jwtverify } from "../../utils/jwt.js";
 
 const route = Router();
 const bcryptsalt = bcrypt.genSaltSync();
@@ -20,16 +21,8 @@ route.get("/", async (req, res) => {
 });
 
 route.get("/profile", async (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    const userinfo = jwt.verify(token, JWT_SECRET, {}, (error, userinfo) => {
-      if (error) throw error;
-
-      res.json(userinfo);
-    });
-  } else {
-    res.json(null);
-  }
+  const userinfo = Jwtverify(req);
+  res.json(userinfo);
 });
 
 route.post("/", async (req, res) => {
@@ -61,16 +54,15 @@ route.post("/login", async (req, res) => {
 
       if (passwordCorrect) {
         const newuserobj = { name, email, _id };
-        const token = jwt.sign(newuserobj, JWT_SECRET, {}, (error, token) => {
-          if (error) throw error;
-
+        try {
+          const token = await JWTsign(newuserobj);
           res.cookie("token", token).json(newuserobj);
-        });
+        } catch (error) {
+          console.log("erro no token", error);
+        }
       } else {
-        res.status(400).json("senha incorreta");
+        res.status(400).json("usuario nao encontrado");
       }
-    } else {
-      res.status(400).json("usuario nao encontrado");
     }
   } catch (error) {
     res.status(500).json(error);

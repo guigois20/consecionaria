@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { movenext, hoje, useAno } from "../scripts/movenext.js";
+import { Navigate } from "react-router-dom";
 
 const newmoto = () => {
   const [btnvendida, setbtnvendida] = useState(false);
@@ -17,12 +18,13 @@ const newmoto = () => {
   const [comprador, setcomprador] = useState("");
   const [refcomprador, setrefcomprador] = useState("");
   const [dtcomp, setdtcomp] = useState(hoje);
-  var [vlcomp, setvlcomp] = useState("");
+  const [vlcomp, setvlcomp] = useState("");
   const [vendida, setvendida] = useState("");
   const [refvendida, setrefvendida] = useState("");
   const [dtvend, setdtvend] = useState(hoje);
   const [vlvend, setvlvend] = useState("");
   const [photolink, setphotolink] = useState("");
+  const [redirect, setredirect] = useState(false);
 
   const {
     anofabricado,
@@ -60,7 +62,9 @@ const newmoto = () => {
     };
 
     alert(JSON.stringify(moto, null, 2));
+    setredirect(true);
   };
+  if (redirect) <Navigate to={"/"} />;
 
   return (
     <form
@@ -71,7 +75,7 @@ const newmoto = () => {
         <div className="flex w-full max-w-7xl flex-col items-center justify-center rounded-2xl bg-orange-100 p-6">
           <h1>Cadastrar modelo</h1>
 
-          <div className="input-box flex flex-col justify-center gap-2 rounded-2xl p-4">
+          <div className="input-box flex w-full flex-col justify-center gap-2 rounded-2xl p-4 pl-20">
             <label htmlFor="modelo">Qual é o modelo:</label>
             <div className="modelo flex flex-row">
               <select
@@ -262,9 +266,9 @@ const newmoto = () => {
               <h1></h1>
             </div>
             <label htmlFor="comprador">A moto foi comprada a:</label>
-            <div className="comprada">
+            <div className="comprada gap-8">
               <input
-                className="rounded-2xl border text-center"
+                className="m-2 rounded-2xl border p-2 text-center"
                 type="text"
                 name="comprador"
                 id="comprador"
@@ -273,7 +277,7 @@ const newmoto = () => {
                 placeholder="comprador"
               />
               <input
-                className="rounded-2xl border text-center"
+                className="rounded-2xl border p-2 text-center"
                 type="text"
                 name="refcomprador"
                 id="refcomprador"
@@ -283,7 +287,7 @@ const newmoto = () => {
               />
               <div className="data comprada">
                 <input
-                  className="rounded-2xl border text-center"
+                  className="m-2 rounded-2xl border p-2 text-center"
                   type="date"
                   name="data comprada"
                   id="dtcomp"
@@ -294,7 +298,7 @@ const newmoto = () => {
                   title="dtcomp"
                 />
                 <input
-                  className="rounded-2xl border text-center"
+                  className="rounded-2xl border p-2 text-center"
                   type="number"
                   name="preco comprada"
                   id="vlcomp"
@@ -318,7 +322,7 @@ const newmoto = () => {
               <label htmlFor="vendida">
                 A moto foi vendida
                 <input
-                  className="rounded-2xl border text-center"
+                  className="gap-2 rounded-2xl border text-center"
                   type="checkbox"
                   name="btnvenda"
                   id="btnvenda"
@@ -326,7 +330,7 @@ const newmoto = () => {
                 />
               </label>
               <div
-                className="dadosvenda"
+                className="dadosvenda gap-2"
                 id="dadosvenda"
                 style={{
                   display: btnvendida ? "block" : "none",
@@ -335,7 +339,7 @@ const newmoto = () => {
                 }}
               >
                 <input
-                  className="rounded-2xl border text-center"
+                  className="m-2 rounded-2xl border p-2 text-center"
                   type="text"
                   name="vendida"
                   id="vendida"
@@ -344,7 +348,7 @@ const newmoto = () => {
                   placeholder="vendida á"
                 />
                 <input
-                  className="rounded-2xl border text-center"
+                  className="rounded-2xl border p-2 text-center"
                   type="text"
                   name="refvendida"
                   id="refvendida"
@@ -354,7 +358,7 @@ const newmoto = () => {
                 />
                 <div>
                   <input
-                    className="rounded-2xl border text-center"
+                    className="m-2 rounded-2xl border p-2 text-center"
                     type="date"
                     name="datavenda"
                     value={dtvend}
@@ -363,7 +367,7 @@ const newmoto = () => {
                     title="dtvend"
                   />
                   <input
-                    className="rounded-2xl border text-center"
+                    className="rounded-2xl border p-2 text-center"
                     type="number"
                     name="precovendida"
                     id="valorvenda"
@@ -380,21 +384,24 @@ const newmoto = () => {
                 </div>
               </div>
             </div>
-            <div className="acessorio">
+            <label
+              htmlFor="jogoderoda"
+              className="acessorio flex aspect-auto items-center justify-center gap-2 rounded-2xl border bg-orange-200 hover:cursor-pointer hover:bg-orange-300"
+            >
               <input
-                className="rounded-2xl border"
+                className="flex aspect-auto items-center justify-center gap-2 rounded-2xl border bg-orange-200 hover:cursor-pointer hover:bg-orange-300"
                 type="checkbox"
                 name="jogoderoda"
                 id="jogoderoda"
                 title="jogoderoda"
                 onChange={(e) => setjogoderoda(e.target.checked)}
               />
-              Tem Jogo de Roda
-            </div>
+              <label htmlFor="jogoderoda">Tem Jogo de Roda</label>
+            </label>
             <div>
               <div className="photolink flex gap-2 py-2">
                 <input
-                  className="min-w-auto truncate rounded-2xl border text-center"
+                  className="w-full min-w-auto truncate rounded-2xl border text-center"
                   type="url"
                   name="photolink"
                   id="photolink"
