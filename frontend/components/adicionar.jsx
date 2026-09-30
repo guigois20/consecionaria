@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Newmoto from "./newmoto";
 
-const adicionar = () => {
+const adicionar = ({ user }) => {
   const { action } = useParams();
   const addNewMoto = () => {
-    console.log("adicionando moto");
+    console.log("adicionando moto ");
   };
 
   return (
@@ -19,7 +19,7 @@ const adicionar = () => {
           adicionar moto
         </Link>
       ) : (
-        <Newmoto />
+        <Newmoto user={user} />
       )}
     </div>
   );

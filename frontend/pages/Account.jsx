@@ -1,10 +1,11 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import Acclog from "../components/Acclog.jsx";
 import Adicionar from "../components/adicionar.jsx";
 
 const account = ({ user, setUser }) => {
   const { subpage, action } = useParams();
+  if (!user) return <Navigate to={"/login"} />;
 
   const buttonclass = (button) => {
     let finalclassname =
@@ -31,7 +32,7 @@ const account = ({ user, setUser }) => {
         </div>
         <div className="w-full max-w-7xl">
           {subpage === "perfil" && <Acclog user={user} setUser={setUser} />}
-          {subpage === "adicionar" && <Adicionar />}
+          {subpage === "adicionar" && <Adicionar user={user} />}
         </div>
       </div>
     </section>

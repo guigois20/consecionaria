@@ -2,6 +2,8 @@ import { Router } from "express";
 import Placesmodel from "./placesmodel.js";
 import connectDB from "../../config/db.js";
 import { Jwtverify } from "../../utils/jwt.js";
+import { downloadimage } from "../../utils/imagedownloader.js";
+import { __dirname } from "../../index.js";
 
 const router = Router();
 
@@ -25,11 +27,12 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   try {
-    //const { _id } = await Jwtverify(req);
+    const { _id } = await Jwtverify(req);
     connectDB();
-    const owner = "6a9c59c20b1bd9fbda915b3a";
+    console.log(_id);
+    //const owner = "6a9c59c20b1bd9fbda915b3a";
     const newplacedoc = await Placesmodel.create({
-      owner: owner,
+      owner: _id,
       modelo,
       cidade,
       placa,
@@ -51,6 +54,17 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json("deu erro ao criar o placedoc", error);
+  }
+});
+
+router.post("/imagens/link", async (req, res) => {
+  const { link } = req.body;
+  try {
+    const filename = await downloadimage(link, `${__dirname}/tmp/`);
+    res.json(filename);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("deu erro ao baixar imagem", error);
   }
 });
 

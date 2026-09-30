@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { movenext, hoje, useAno } from "../scripts/movenext.js";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
+import Photos from "./photos.jsx";
 
-const newmoto = () => {
+const newmoto = ({ user }) => {
+  // console.log("usuario : ", user._id);
+
   const [btnvendida, setbtnvendida] = useState(false);
   const [jogoderoda, setjogoderoda] = useState(false);
   const [modelo, setmodelo] = useState("biz");
@@ -19,11 +23,16 @@ const newmoto = () => {
   const [refcomprador, setrefcomprador] = useState("");
   const [dtcomp, setdtcomp] = useState(hoje);
   const [vlcomp, setvlcomp] = useState("");
-  const [vendida, setvendida] = useState("");
-  const [refvendida, setrefvendida] = useState("");
-  const [dtvend, setdtvend] = useState(hoje);
-  const [vlvend, setvlvend] = useState("");
-  const [photolink, setphotolink] = useState("");
+
+  const [vendida, setvendida] = btnvendida ? useState(null) : useState("");
+  const [refvendida, setrefvendida] = btnvendida
+    ? useState(null)
+    : useState("");
+  const [dtvend, setdtvend] = btnvendida ? useState(null) : useState(hoje);
+  const [vlvend, setvlvend] = btnvendida ? useState(null) : useState("");
+
+  const [photolink, setPhotolink] = useState("");
+  const [photo, setPhoto] = useState([]);
   const [redirect, setredirect] = useState(false);
 
   const {
@@ -33,17 +42,12 @@ const newmoto = () => {
     handleAnoModeloChange,
   } = useAno();
 
-  const handlephotolink = (e) => {
-    const link = photolink;
-
-    e.preventDefault();
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const placa = `${letra}-${numero}`;
     const cidader = `${cidade}/${uf}`;
     const modelor = `${modelo} ${cc} ${versao}`;
+
     const moto = {
       modelor,
       cidader,
@@ -60,11 +64,50 @@ const newmoto = () => {
       vlvend,
       photolink,
     };
+    if (
+      modelor
+      //  &&
+      // placa &&
+      // cidader &&
+      // km &&
+      // cor &&
+      // comprador &&
+      // refcomprador &&
+      // dtcomp &&
+      // vlcomp &&
+      // photolink.length > 0
+    ) {
+      try {
+        const _id = user._id;
+        const newmoto = await axios.post("/places", {
+          owner: _id,
+          modelo: modelor,
+          cidade: cidader,
+          placa,
+          km,
+          cor,
+          comprador,
+          refcomprador,
+          dtcomp,
+          vlcomp,
+          vendida,
+          refvendida,
+          dtvend,
+          vlvend,
+          photos: photolink,
+        });
 
-    alert(JSON.stringify(moto, null, 2));
-    setredirect(true);
+        alert(JSON.stringify(moto, null, 2));
+        setredirect(true);
+      } catch (error) {
+        console.error("erro ao criar moto", JSON.stringify(error));
+        alert("erro ao cadastrar moto");
+      }
+    } else {
+      alert("preencha todas as informaçoes");
+    }
   };
-  if (redirect) <Navigate to={"/"} />;
+  if (redirect) return <Navigate to={"/account/adicionar"} />;
 
   return (
     <form
@@ -394,39 +437,18 @@ const newmoto = () => {
                 name="jogoderoda"
                 id="jogoderoda"
                 title="jogoderoda"
+                value={jogoderoda}
                 onChange={(e) => setjogoderoda(e.target.checked)}
               />
               <label htmlFor="jogoderoda">Tem Jogo de Roda</label>
             </label>
             <div>
-              <div className="photolink flex gap-2 py-2">
-                <input
-                  className="w-full min-w-auto truncate rounded-2xl border text-center"
-                  type="url"
-                  name="photolink"
-                  id="photolink"
-                  value={photolink}
-                  onInput={(e) => {
-                    setphotolink(e.target.value);
-                  }}
-                  placeholder="enviar foto pelo link"
-                />
-                <button
-                  onClick={handlephotolink}
-                  className="min-w-32 rounded-2xl border bg-gray-100 text-center transition hover:cursor-pointer hover:bg-gray-500"
-                >
-                  enviar foto
-                </button>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                <label
-                  htmlFor="file"
-                  className="flex aspect-square items-center justify-center gap-2 rounded-2xl border bg-orange-200 hover:cursor-pointer hover:bg-orange-300"
-                >
-                  upload
-                  <input type="file" id="file" className="hidden" />
-                </label>
-              </div>
+              <Photos
+                photo={photo}
+                setPhoto={setPhoto}
+                photolink={photolink}
+                setPhotolink={setPhotolink}
+              />
             </div>
           </div>
           <div className="butoes" id="butoes">

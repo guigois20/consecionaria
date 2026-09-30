@@ -16,6 +16,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "image-downloader": "^4.3.0",
+    "mime-types": "^3.0.2",
     "mongodb": "^7.6.0",
     "mongoose": "^9.9.5"
   }
