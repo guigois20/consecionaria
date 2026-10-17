@@ -36,11 +36,12 @@ const getExtension = (path) => {
   const mimeType = mime.lookup(path);
   const contentype = mime.contentType(mimeType);
   const extensao = mime.extension(contentype);
-  return extensao;
+
+  return { extensao, mimeType };
 };
 
 export const downloadimage = async (link, destino) => {
-  const extensao = getExtension(link);
+  const { extensao, mimeType } = getExtension(link);
   const filename = Date.now() + "." + extensao;
   const fullpath = `${destino}${filename}`;
 
