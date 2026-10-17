@@ -22,10 +22,12 @@ const acclog = ({ user, setUser }) => {
   }
   return (
     <div>
-      <div className="flex flex-col gap-2">
-        <p>
-          logado como {user?.name} ({user?.email})
-        </p>
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div className="items-center justify-center">
+          <p>
+            logado como {user?.name} ({user?.email})
+          </p>
+        </div>
         <div className="flex items-center justify-center">
           <button
             onClick={Logout}

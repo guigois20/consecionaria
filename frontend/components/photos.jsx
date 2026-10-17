@@ -4,12 +4,41 @@ import axios from "axios";
 const photos = ({ photo, setPhoto, photolink, setPhotolink }) => {
   const uploadphotolink = async (e) => {
     e.preventDefault();
-    if (photolink) {
-      const { data } = await axios.post("/places/imagens/link", {
-        link: photolink,
-      });
 
-      setPhoto((prevValue) => [...prevValue, data]);
+    if (photolink) {
+      try {
+        const { data: filename } = await axios.post("/places/imagens/link", {
+          link: photolink,
+        });
+
+        setPhoto((prevValue) => [...prevValue, filename]);
+        console.log("imagem enviada com sucesso");
+      } catch (error) {
+        alert("deu erro ao enviar imagem por link", JSON.stringify.error);
+      }
+    }
+  };
+
+  const uploadPhoto = async (e) => {
+    e.preventDefault();
+    const { files } = e.target;
+    const formData = new FormData();
+    const filesArray = [...files];
+
+    filesArray.forEach((file) => formData.append("files", file));
+
+    try {
+      const { data: urlArray } = await axios.post(
+        "/places/imagens/file",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
+      setPhoto((prevValue) => [...prevValue, ...urlArray]);
+      console.log(files);
+    } catch (error) {
+      alert("deu erro ao enviar imagem", JSON.stringify.error);
     }
   };
   return (
@@ -34,12 +63,26 @@ const photos = ({ photo, setPhoto, photolink, setPhotolink }) => {
         </button>
       </div>
       <div className="grid grid-cols-4 gap-4">
+        {photo.map((photo) => (
+          <img
+            className="aspect-square rounded-2xl object-cover"
+            src={`${photo}`}
+            alt="foto da moto"
+          />
+        ))}
+
         <label
           htmlFor="file"
           className="flex aspect-square items-center justify-center gap-2 rounded-2xl border bg-orange-200 hover:cursor-pointer hover:bg-orange-300"
         >
           upload
-          <input type="file" id="file" className="hidden" />
+          <input
+            type="file"
+            id="file"
+            multiple
+            className="hidden"
+            onChange={uploadPhoto}
+          />
         </label>
       </div>
     </div>
